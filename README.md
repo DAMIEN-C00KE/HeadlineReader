@@ -1,5 +1,5 @@
 # HeadlineReader
-Grabs headlines from the inputted URLs, and prints them to an SQLite database. (# Work in progress)
+Scrapes headlines from the inputted URLs, and prints them to an SQLite database. (# Work in progress)
 
 Before running, ensure you've installed the required packages via the Julia REPL:
 - import Pkg
