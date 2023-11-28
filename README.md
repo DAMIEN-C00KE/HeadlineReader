@@ -1,10 +1,15 @@
 # HeadlineReader
-Grabs headlines from the inputted URLs, and prints them to an SQLite database.
+Grabs headlines from the inputted URLs, and prints them to an SQLite database. (# Work in progress)
 
 Before running, ensure you've installed the required packages via the Julia REPL:
-import Pkg
+- import Pkg
 - Pkg.add("HTTP")
 - Pkg.add("Gumbo")
 - Pkg.add("Cascadia")
 - Pkg.add("SQLite")
 - Pkg.add("Dates")
+
+TODO:
+- Create tests to appropriately handle errors
+- Create framework for identifying recurring headlines
+- Implement NLP and create a sentimental analysis framework
