@@ -1,5 +1,7 @@
+# Import packages required
 using HTTP, Gumbo, Cascadia, SQLite, Dates
 
+# Web request
 function fetch_headlines(url)
     response = HTTP.get(url)
     parsed_html = parsehtml(String(response.body))
@@ -15,6 +17,7 @@ function fetch_headlines(url)
     return headlines
 end
 
+# Log headlines to SQLite database
 function log_headlines_to_db(headlines, url, db)
     for headline in headlines
         SQLite.execute(db, "INSERT INTO headlines (date, url, headline) VALUES (?, ?, ?)",
@@ -23,7 +26,7 @@ function log_headlines_to_db(headlines, url, db)
 end
 
 function main()
-    urls = ["https://cointelegraph.com/", "https://www.coindesk.com/"]
+    urls = [] # Input URLs (comma seperated)
     db = SQLite.DB("headlines.db")
 
     SQLite.execute(db, """
