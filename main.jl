@@ -64,7 +64,8 @@ function process_url(url, headlines_channel)
 end
 
 function main()
-    urls = ["https://u.today/", "https://www.coindesk.com/", "https://decrypt.co/", "https://www.theblock.co/", "https://finance.yahoo.com/topic/crypto/?guccounter=1&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAABgw7ixLkKNAGIfMi3tyeiuU_AFfbNa8dJSR5fw2USIZmvKacGLntiAw6C8o55WyV05DLUa3AM32T2zkTEWN5RuhMQXiHyDEsdtl_vNM-BMnrjG_GSeRm8lM6caZMN-Z46xvo2vkMm868UbLRuXN5Wm2yhGmE9Y-4bv05c70Yt9N"] # Input URLs (comma seperated)
+    # Input URLs (comma seperated)
+    urls = ["https://u.today/", "https://www.coindesk.com/", "https://decrypt.co/", "https://www.theblock.co/", "https://finance.yahoo.com/topic/crypto/?guccounter=1&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAABgw7ixLkKNAGIfMi3tyeiuU_AFfbNa8dJSR5fw2USIZmvKacGLntiAw6C8o55WyV05DLUa3AM32T2zkTEWN5RuhMQXiHyDEsdtl_vNM-BMnrjG_GSeRm8lM6caZMN-Z46xvo2vkMm868UbLRuXN5Wm2yhGmE9Y-4bv05c70Yt9N"] 
     db = SQLite.DB("headlines.db")
 
     # Create tables if they don't exist
