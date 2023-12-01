@@ -54,8 +54,17 @@ function log_word_counts_to_db(word_counts, db)
     end
 end
 
+function process_url(url, headlines_channel)
+    try
+        headlines = fetch_headlines(url)
+        put!(headlines_channel, (url, headlines))
+    catch e
+        @error "Failed to process URL: $url" exception=(e, catch_backtrace())
+    end
+end
+
 function main()
-    urls = ["example_url.com", "example_url2.com"] # Input URLs (comma seperated)
+    urls = ["https://u.today/", "https://www.coindesk.com/", "https://decrypt.co/", "https://www.theblock.co/", "https://finance.yahoo.com/topic/crypto/?guccounter=1&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAABgw7ixLkKNAGIfMi3tyeiuU_AFfbNa8dJSR5fw2USIZmvKacGLntiAw6C8o55WyV05DLUa3AM32T2zkTEWN5RuhMQXiHyDEsdtl_vNM-BMnrjG_GSeRm8lM6caZMN-Z46xvo2vkMm868UbLRuXN5Wm2yhGmE9Y-4bv05c70Yt9N"] # Input URLs (comma seperated)
     db = SQLite.DB("headlines.db")
 
     # Create tables if they don't exist
@@ -77,15 +86,22 @@ function main()
     """)
 
     while true
+        headlines_channel = Channel{Tuple}(length(urls))
+
         for url in urls
-            headlines = fetch_headlines(url)
+            @async process_url(url, headlines_channel)
+        end
+
+        for _ in 1:length(urls)
+            url, headlines = take!(headlines_channel)
             log_headlines_to_db(headlines, url, db)
 
             word_counts = count_words(headlines)
             log_word_counts_to_db(word_counts, db)
         end
 
-        sleep(60 * 5) # Adjust as needed
+        close(headlines_channel)
+        sleep(60 * 1) # Adjust as needed
     end
 end
 
