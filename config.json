@@ -1,0 +1,11 @@
+{
+    "sleep_interval": 60,
+    "urls": [
+        "www.exampleURL_1",
+        "www.exampleURL_2",
+    ],
+    "stop_words": [
+        "the", "is", "at", "of", "and", "in", "to", "a", "crypto", "cryptocurrency", "news", "with", "as",
+        "for", "s", "u", "1", "on", "that", "this", "its", "it"
+    ]
+}
