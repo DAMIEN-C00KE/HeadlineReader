@@ -5,9 +5,17 @@ using HTTP, Gumbo, Cascadia, SQLite, Dates
 stop_words = Set(["the", "is", "at", "of", "and", "in", "to", "a", "crypto", "cryptocurrency", "news", "with", "as",
 "for", "s", "u", "1", "on", "that", "this", "its", "it"])
 
+# Define User-Agent strings
+chrome_user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36"
+firefox_user_agent = "Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0"
+
 # Function to fetch headlines
-function fetch_headlines(url)
-    response = HTTP.get(url)
+function fetch_headlines(url, use_chrome_agent)
+    headers = [
+        "User-Agent" => use_chrome_agent ? chrome_user_agent : firefox_user_agent
+    ]
+
+    response = HTTP.get(url, headers)
     parsed_html = parsehtml(String(response.body))
 
     headlines = []
@@ -54,9 +62,9 @@ function log_word_counts_to_db(word_counts, db)
     end
 end
 
-function process_url(url, headlines_channel)
+function process_url(url, headlines_channel, use_chrome_agent)
     try
-        headlines = fetch_headlines(url)
+        headlines = fetch_headlines(url, use_chrome_agent)
         put!(headlines_channel, (url, headlines))
     catch e
         @error "Failed to process URL: $url" exception=(e, catch_backtrace())
@@ -87,10 +95,13 @@ function main()
     """)
 
     while true
+        use_chrome_agent = true
+
         headlines_channel = Channel{Tuple}(length(urls))
 
         for url in urls
-            @async process_url(url, headlines_channel)
+            @async process_url(url, headlines_channel, use_chrome_agent)
+            use_chrome_agent = !use_chrome_agent # Toggle between Chrome and Firefox
         end
 
         for _ in 1:length(urls)
@@ -99,6 +110,7 @@ function main()
 
             word_counts = count_words(headlines)
             log_word_counts_to_db(word_counts, db)
+
         end
 
         close(headlines_channel)
