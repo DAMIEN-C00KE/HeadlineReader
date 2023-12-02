@@ -1,9 +1,19 @@
 # Import packages required
-using HTTP, Gumbo, Cascadia, SQLite, Dates
+using HTTP, Gumbo, Cascadia, SQLite, Dates, JSON
 
-# Define stop words
-stop_words = Set(["the", "is", "at", "of", "and", "in", "to", "a", "crypto", "cryptocurrency", "news", "with", "as",
-"for", "s", "u", "1", "on", "that", "this", "its", "it"])
+# Load config from JSON file
+function load_config(config_path)
+    open(config_path, "r") do file
+        return JSON.parse(file)
+    end
+end
+
+config = load_config("config.json")
+
+# Using configuration
+sleep_interval = config["sleep_interval"]
+urls = config["urls"]
+stop_words = Set(config["stop_words"])
 
 # Define User-Agent strings
 chrome_user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36"
@@ -72,8 +82,6 @@ function process_url(url, headlines_channel, use_chrome_agent)
 end
 
 function main()
-    # Input URLs (comma seperated)
-    urls = ["https://u.today/", "https://www.coindesk.com/", "https://decrypt.co/", "https://www.theblock.co/", "https://finance.yahoo.com/topic/crypto/?guccounter=1&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAABgw7ixLkKNAGIfMi3tyeiuU_AFfbNa8dJSR5fw2USIZmvKacGLntiAw6C8o55WyV05DLUa3AM32T2zkTEWN5RuhMQXiHyDEsdtl_vNM-BMnrjG_GSeRm8lM6caZMN-Z46xvo2vkMm868UbLRuXN5Wm2yhGmE9Y-4bv05c70Yt9N"] 
     db = SQLite.DB("headlines.db")
 
     # Create tables if they don't exist
@@ -114,7 +122,7 @@ function main()
         end
 
         close(headlines_channel)
-        sleep(60 * 1) # Adjust as needed
+        sleep(sleep_interval) # Adjust in config file (seconds)
     end
 end
 
