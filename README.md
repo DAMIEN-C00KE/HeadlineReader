@@ -8,6 +8,7 @@ Before running, ensure you've installed the required packages via the Julia REPL
 - Pkg.add("Cascadia")
 - Pkg.add("SQLite")
 - Pkg.add("Dates")
+- Pkg.add("JSON")
 
 TODO:
 - Create tests to appropriately handle errors
