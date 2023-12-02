@@ -2,7 +2,9 @@
 Scrapes headlines from the inputted URLs, and prints them to an SQLite database. (# Work in progress)
 
 Before running, ensure you've installed the required packages via the Julia REPL:
-- import Pkg
+Guide:
+- Use import Pkg
+then install below packages:
 - Pkg.add("HTTP")
 - Pkg.add("Gumbo")
 - Pkg.add("Cascadia")
