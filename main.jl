@@ -14,6 +14,8 @@ config = load_config("config.json")
 sleep_interval = config["sleep_interval"]
 urls = config["urls"]
 stop_words = Set(config["stop_words"])
+positive_words = Set(config["positive_words"])
+negative_words = Set(config["negative_words"])
 
 # Define User-Agent strings
 chrome_user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36"
@@ -43,10 +45,11 @@ end
 function log_headlines_to_db(headlines, url, db)
     for headline in headlines
         # Format the current date-time as text
+        processed_text, sentiment = process_headline(headline)
         datetime_text = Dates.format(Dates.now(), "yyyy-mm-dd HH:MM:SS")
 
-        SQLite.execute(db, "INSERT INTO headlines (date, url, headline) VALUES (?, ?, ?)",
-                        (datetime_text, url, headline))
+        SQLite.execute(db, "INSERT INTO headlines (date, url, headline, sentiment) VALUES (?, ?, ?, ?)",
+                        (datetime_text, url, processed_text, sentiment))
     end
 end
 
@@ -54,6 +57,7 @@ end
 function count_words(headlines)
     word_counts = Dict{String, Int}()
     for headline in headlines
+        processed_text, _ = process_headline(headline)
         words = split(lowercase(headline), r"\W+")
         for word in words
             if word ∉ stop_words && word != ""
@@ -72,6 +76,35 @@ function log_word_counts_to_db(word_counts, db)
     end
 end
 
+# Function for basic sentiment analysis
+function analyze_sentiment(text)
+    positive_count = 0
+    negative_count = 0
+
+    words = split(lowercase(text), ' ')
+    for word in words
+        if word in positive_words # These sets should contain lower case words
+            positive_count += 1
+        elseif word in negative_words
+            negative_count += 1
+        end
+    end
+
+    if positive_count > negative_count
+        return "Positive"
+    elseif negative_count > positive_count
+        return "Negative"
+    else
+        return "Neutral"
+    end
+end
+
+# Function to process each headline
+function process_headline(headline)
+    sentiment = analyze_sentiment(headline)
+    return headline, sentiment
+end
+
 function process_url(url, headlines_channel, use_chrome_agent)
     try
         headlines = fetch_headlines(url, use_chrome_agent)
@@ -80,6 +113,17 @@ function process_url(url, headlines_channel, use_chrome_agent)
         @error "Failed to process URL: $url" exception=(e, catch_backtrace())
     end
 end
+
+function update_sentiment_count(db, sentiment)
+    # This statement inserts a new record or updates the count if the sentiment already exists
+    SQLite.execute(db, """
+        INSERT INTO sentiment_counts (sentiment, count)
+        VALUES (?, 1)
+        ON CONFLICT(sentiment)
+        DO UPDATE SET count = count + 1
+    """, (sentiment,))
+end
+
 
 function main()
     db = SQLite.DB("headlines.db")
@@ -90,7 +134,8 @@ function main()
             id INTEGER PRIMARY KEY,
             date TEXT,
             url TEXT,
-            headline TEXT
+            headline TEXT,
+            sentiment TEXT
         )
     """)
 
@@ -98,6 +143,14 @@ function main()
         CREATE TABLE IF NOT EXISTS word_counts (
             id INTEGER PRIMARY KEY,
             word TEXT,
+            count INTEGER
+        )
+    """)
+
+    SQLite.execute(db, """
+        CREATE TABLE IF NOT EXISTS sentiment_counts (
+            id INTEGER PRIMARY KEY,
+            sentiment TEXT UNIQUE,
             count INTEGER
         )
     """)
@@ -119,6 +172,10 @@ function main()
             word_counts = count_words(headlines)
             log_word_counts_to_db(word_counts, db)
 
+            for headline in headlines
+                _, sentiment = process_headline(headline)
+                update_sentiment_count(db, sentiment)
+            end
         end
 
         close(headlines_channel)
