@@ -1,5 +1,5 @@
 {
-    "sleep_interval": 60,
+    "sleep_interval": 10,
     "urls": [
         "https://u.today/",
         "https://www.coindesk.com/",
@@ -12,6 +12,5 @@
         "for", "s", "u", "1", "on", "that", "this", "its", "it", "price", "0", "000", "2", "3", "4", "5",
         "6", "7", "8", "9", "what", "how"
     ],
-    "positive_words": ["good", "happy", "joy", "positive", "success"],
-    "negative_words": ["bad", "sad", "pain", "negative", "failure"]
+    "financial_dict_path": "Insert Path to Financial Dictionary here"
 }
