@@ -16,7 +16,7 @@ function load_financial_dictionary(dict_path)
 
     for row in eachrow(df)
         # If using a different dictionary, ensure you input the correct names of columns,
-        # This assumes your using the Loughran-Mcdonald dictionary
+        # This assumes you're using the Loughran-Mcdonald dictionary
         word = lowercase(row[:Word])
         
             if row[:Positive] == 2009
