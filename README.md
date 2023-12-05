@@ -11,6 +11,8 @@ Before running, ensure you've installed the required packages via the Julia REPL
 - Pkg.add("SQLite")
 - Pkg.add("Dates")
 - Pkg.add("JSON")
+- Pkg.add("CSV")
+- Pkg.add("DataFrames")
 
 TODO:
 - Create tests to appropriately handle errors
