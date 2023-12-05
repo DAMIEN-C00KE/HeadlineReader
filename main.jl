@@ -1,5 +1,5 @@
 # Import packages required
-using HTTP, Gumbo, Cascadia, SQLite, Dates, JSON
+using HTTP, Gumbo, Cascadia, SQLite, Dates, JSON, CSV, DataFrames
 
 # Load config from JSON file
 function load_config(config_path)
@@ -8,14 +8,38 @@ function load_config(config_path)
     end
 end
 
+# Load financial dictionary (Loughran-Mcdonald = default)
+function load_financial_dictionary(dict_path)
+    df = CSV.read(dict_path, DataFrame)
+    positive_words = Set{String}()
+    negative_words = Set{String}()
+
+    for row in eachrow(df)
+        # If using a different dictionary, ensure you input the correct names of columns,
+        # This assumes your using the Loughran-Mcdonald dictionary
+        word = lowercase(row[:Word])
+        
+            if row[:Positive] == 2009
+                push!(positive_words, word)
+            end
+            if row[:Negative] == 2009
+                push!(negative_words, word)
+        end
+    end
+
+    return positive_words, negative_words
+end
+
 config = load_config("config.json")
 
 # Using configuration
 sleep_interval = config["sleep_interval"]
 urls = config["urls"]
 stop_words = Set(config["stop_words"])
-positive_words = Set(config["positive_words"])
-negative_words = Set(config["negative_words"])
+financial_dict_path = config["financial_dict_path"]
+
+# Load words from dictionary
+positive_words, negative_words = load_financial_dictionary(financial_dict_path)
 
 # Define User-Agent strings
 chrome_user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36"
