@@ -1,11 +1,8 @@
 {
     "sleep_interval": 10,
     "urls": [
-        "https://u.today/",
-        "https://www.coindesk.com/",
-        "https://decrypt.co/",
-        "https://www.theblock.co/",
-        "https://finance.yahoo.com/topic/crypto/"
+        "www.exampleURL_1.com",
+        "www.exampleURL_2.com"
     ],
     "stop_words": [
         "the", "is", "at", "of", "and", "in", "to", "a", "crypto", "cryptocurrency", "news", "with", "as",
