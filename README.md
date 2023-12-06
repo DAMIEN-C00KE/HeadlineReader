@@ -21,3 +21,6 @@ Before running, ensure you've installed the required packages via the Julia REPL
 TODO:
 - Create framework for identifying recurring headlines
 - Implement NLP for more robust identification of sentiment
+- Aggregate sentiment on a weekly basis
+- Add a matrix graph to track weekly sentiment over time
+- Plot sentiment next to price chart to  visualise price/sentiment correlation
