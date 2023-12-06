@@ -1,5 +1,6 @@
 # HeadlineReader
 Scrapes headlines from the inputted URLs, and prints them to an SQLite database. (# Work in progress)
+- Current emphasis is on scraping financial news data. Can be easily customised to other use-case
 
 Before running, ensure you've installed the required packages via the Julia REPL:
 
