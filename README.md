@@ -13,10 +13,10 @@ Before running, ensure you've installed the required packages via the Julia REPL
 - Pkg.add("JSON")
 - Pkg.add("CSV")
 - Pkg.add("DataFrames")
+- Pkg.add("Plots")
 
 - Download Loughran-Mcdonald financial dictionary from: https://sraf.nd.edu/loughranmcdonald-master-dictionary/
 
 TODO:
-- Create tests to appropriately handle errors
 - Create framework for identifying recurring headlines
-- Implement NLP and create a sentimental analysis framework
+- Implement NLP for more robust identification of sentiment
