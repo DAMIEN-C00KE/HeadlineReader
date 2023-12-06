@@ -5,9 +5,7 @@
         "www.exampleURL_2.com"
     ],
     "stop_words": [
-        "the", "is", "at", "of", "and", "in", "to", "a", "news", "with", "as",
-        "for", "s", "u", "1", "on", "that", "this", "its", "it", "price", "0", "000", "2", "3", "4", "5",
-        "6", "7", "8", "9", "what", "how"
+        "exampleword1", "exampleword2"
     ],
     "financial_dict_path": "Insert Path to Financial Dictionary here"
 }
