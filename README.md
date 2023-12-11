@@ -10,7 +10,7 @@ Scrapes headlines from the inputted URLs, and prints them to an SQLite database.
 
 - Download Loughran-Mcdonald financial dictionary from: https://sraf.nd.edu/loughranmcdonald-master-dictionary/
 
-TODO:
+#### TODO:
 - Create framework for identifying recurring headlines
 - Implement NLP for more robust identification of sentiment
 - Aggregate sentiment on a timeframe basis (daily, weekly, monthly, quarterly)
