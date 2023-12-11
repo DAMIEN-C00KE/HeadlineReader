@@ -2,10 +2,11 @@
 Scrapes headlines from the inputted URLs, and prints them to an SQLite database. (# Work in progress)
 - Current emphasis is on scraping financial news data. Can be easily customised to other use-case
 
-- After cloning repo, proceed to directory where you have stored the repo, and in the Julia REPL: 
-1) Go to pkg mode: julia> ]
-2) Activate a new environment: (CurrentVersion) pkg> activate .
-3) Then instantiate: (HeadlineReader) pkg> instantiate
+#### Instructions
+1) After cloning repo, proceed to directory where you have stored the repo, and in the Julia REPL:
+2) Go to pkg mode: julia> ]
+3) Activate a new environment: (CurrentVersion) pkg> activate .
+4) Then instantiate to download the dependancies: (HeadlineReader) pkg> instantiate
 
 - Download Loughran-Mcdonald financial dictionary from: https://sraf.nd.edu/loughranmcdonald-master-dictionary/
 
