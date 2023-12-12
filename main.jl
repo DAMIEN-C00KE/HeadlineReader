@@ -90,12 +90,16 @@ end
 function log_headlines_to_db(headlines, url, db)
     try
         for headline in headlines
-            # Format the current date-time as text
-            processed_text, sentiment = process_headline(headline)
-            datetime_text = Dates.format(Dates.now(), "yyyy-mm-dd HH:MM:SS")
+            # Check if the headline already exists in the database
+            existing_headline = DBInterface.execute(db, "SELECT id FROM headlines WHERE headline = ?", (headline,)) |> DataFrame
+            if isempty(existing_headline)
+                # Format the current date-time as text
+                processed_text, sentiment = process_headline(headline)
+                datetime_text = Dates.format(Dates.now(), "yyyy-mm-dd HH:MM:SS")
 
-            SQLite.execute(db, "INSERT INTO headlines (date, url, headline, sentiment) VALUES (?, ?, ?, ?)",
-                            (datetime_text, url, processed_text, sentiment))
+                SQLite.execute(db, "INSERT INTO headlines (date, url, headline, sentiment) VALUES (?, ?, ?, ?)",
+                                (datetime_text, url, processed_text, sentiment))
+            end
         end
     catch e
         @error "Failed to log headlines to database for URL: $url" exception(e, catch_backtrace())
